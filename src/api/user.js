@@ -21,3 +21,19 @@ export function logout() {
     method: 'post'
   })
 }
+
+export function update(data) {
+  return request({
+    url: '/user/updateInfo',
+    method: 'post',
+    data
+  })
+}
+
+export function getTeacherList(data) {
+  return request({
+    url: '/student/list',
+    method: 'post',
+    data
+  })
+}

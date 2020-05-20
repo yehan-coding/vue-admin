@@ -18,7 +18,7 @@ export function audit(data) {
 
 export function update(data) {
   return request({
-    url: '/topic/updateNotice',
+    url: '/teacher/updateTopic',
     method: 'post',
     data
   })
@@ -34,7 +34,7 @@ export function delet(data) {
 
 export function add(data) {
   return request({
-    url: '/topic/addNotice',
+    url: '/teacher/addTopic',
     method: 'post',
     data
   })
@@ -43,6 +43,38 @@ export function add(data) {
 export function my(data) {
   return request({
     url: '/teacher/list',
+    method: 'post',
+    data
+  })
+}
+
+export function detail(data) {
+  return request({
+    url: '/teacher/listById',
+    method: 'post',
+    data
+  })
+}
+
+export function studentTopicList(data) {
+  return request({
+    url: '/teacher/listBySubject',
+    method: 'post',
+    data
+  })
+}
+
+export function paperAudit(data) {
+  return request({
+    url: '/teacher/audit',
+    method: 'post',
+    data
+  })
+}
+
+export function paperList(data) {
+  return request({
+    url: '/teacher/item',
     method: 'post',
     data
   })

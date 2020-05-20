@@ -3,25 +3,20 @@
     <div slot="header" class="clearfix">
       <el-page-header @back="$router.go(-1)" :content="$route.meta.title"></el-page-header>
     </div>
-    <el-form ref="notice" :rules="formRule" :model="notice" label-width="50px" label-position="top">
-      <el-form-item label="标题" prop="title">
-        <el-input v-model="notice.title"></el-input>
+    <el-form ref="topic" :rules="formRule" :model="topic" label-width="50px" label-position="top">
+      <el-form-item label="课题" prop="name">
+        <el-input v-model="topic.name"></el-input>
       </el-form-item>
       <el-form-item label="类型" prop="type">
-        <el-select v-model="notice.type" size="small" placeholder="请选择文章类型">
-          <el-option v-for="item in noticeType" :key="item.typeId" :label="item.type" :value="item.typeId"></el-option>
-        </el-select>
-      </el-form-item>
-      <el-form-item label="内容" prop="content">
-        <editor v-model="notice.content" :image-server="$imgServer + '/update/uploadByteam'"></editor>
+        <el-input v-model="topic.type"></el-input>
       </el-form-item>
       <el-form-item>
         <template v-if="!$route.meta.isUpdate">
-          <el-button type="primary" size="small" @click="addArticle">发布</el-button>
+          <el-button type="primary" size="small" @click="addTopic">发布</el-button>
           <el-button size="small" @click="resetForm">取消</el-button>
         </template>
         <template v-else>
-          <el-button type="primary" size="small" @click="updateArticle">更新</el-button>
+          <el-button type="primary" size="small" @click="updateTopic">提交</el-button>
           <el-button size="small" @click="resetForm" v-if="!$route.meta.isUpdate">取消</el-button>
         </template>
       </el-form-item>
@@ -30,43 +25,30 @@
 </template>
 
 <script>
-import { add, detail, update } from '@/api/notice'
-import { uploadImg } from '@/api/file'
-import editor from '@/components/editor'
+import { add, detail, update } from '@/api/research'
 
 export default {
-  components: {
-    editor
-  },
   data() {
     return {
-      noticeType: [
-        { typeId: 0, type: '发布' },
-        { typeId: 1, type: '草稿' }
-      ],
-      notice: {
-        title: '',
-        content: '',
-        type: 0
+      topic: {
+        name: '',
+        type: ''
       },
       formRule: {
-        title: [
-          { required: true, message: '标题不能为空' }
-        ],
-        content: [
-          { required: true, message: '内容不能为空' }
+        name: [
+          { required: true, message: '课题不能为空' }
         ],
         type: [
-          { required: true, message: '请选择类型' }
+          { required: true, message: '类型不能为空' }
         ]
       }
     }
   },
   methods: {
-    addArticle () {
-      this.$refs.notice.validate((valid) => {
+    addTopic () {
+      this.$refs.topic.validate((valid) => {
         if (valid) {
-          add(this.notice).then(res => {
+          add(this.topic).then(res => {
             if (res.code === 200) {
               this.$message({
                 message: '添加成功',
@@ -80,14 +62,13 @@ export default {
         }
       })
     },
-    updateArticle () {
-      this.$refs.notice.validate((valid) => {
+    updateTopic () {
+      this.$refs.topic.validate((valid) => {
         if (valid) {
           let send = {
-            id: this.notice.id,
-            title: this.notice.title,
-            content: this.notice.content,
-            type: this.notice.type
+            id: this.topic.id,
+            name: this.topic.name,
+            type: this.topic.type
           }
           update(send).then(res => {
             if (res.code === 200) {
@@ -104,35 +85,12 @@ export default {
       })
     },
     resetForm () {
-      this.$refs.notice.resetFields()
-    },
-    uploadImg (params) {
-      const extName = params.file.name.split('.')[params.file.name.split('.').length - 1]
-      if (extName !== 'jpg' && extName !== 'png') {
-        this.$message({
-          message: '请选择jpg、png文件上传',
-          type: 'warning'
-        })
-        return false
-      } else {
-        const formData = new FormData()
-        formData.append('file', params.file)
-        uploadImg(formData).then(res => {
-          if (res.code !== 200) {
-            this.$message({
-              message: '上传失败',
-              type: 'warning'
-            })
-          } else {
-            this.article.image = res.url
-          }
-        })
-      }
+      this.$refs.topic.resetFields()
     },
     getDetail (id) {
       detail({ id: id }).then(res => {
         if (res.code === 200) {
-          this.notice = res.data
+          this.topic = res.data
         }
       })
     }

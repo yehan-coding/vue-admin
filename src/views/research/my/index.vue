@@ -36,8 +36,7 @@
       <el-table-column prop="status" label="审核状态" align="center" :formatter="getStatus"></el-table-column>
       <el-table-column label="审核" align="center" width="250">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" :disabled="scope.row.status === 1 || scope.row.status === 2" @click="audit(scope.row.id, 2)">通过</el-button>
-          <el-button size="mini" type="danger" :disabled="scope.row.status === 1 || scope.row.status === 2" @click="openDialog(scope.row.id, 1)">不通过</el-button>
+          <el-button size="mini" type="primary" :disabled="scope.row.status === 0 || scope.row.status === 2" @click="routerTo(`/research/update/${scope.row.id}`)">重新提交</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -54,19 +53,6 @@
         @current-change="changePage">
       </el-pagination>
     </div>
-    <el-dialog
-      title="不通过原因"
-      :visible.sync="dialogShow"
-      width="30%"
-      center>
-      <div>
-        <el-input style="margin-top: 10px;" v-model="reason" placeholder="请输入审核不通过原因"></el-input>
-      </div>
-      <span slot="footer" class="dialog-footer">
-        <el-button @click="cancelDialog">取 消</el-button>
-        <el-button type="primary" @click="audit(currentId, paramsFlag)">确 定</el-button>
-      </span>
-    </el-dialog>
   </el-card>
 </template>
 
@@ -91,11 +77,7 @@ export default {
         { code: 0, label: '待审核' },
         { code: 1, label: '未通过' },
         { code: 2, label: '已审核' },
-      ],
-      dialogShow: false,
-      reason: '',
-      currentId: '',
-      paramsFlag: ''
+      ]
     }
   },
   methods: {

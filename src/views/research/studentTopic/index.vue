@@ -1,22 +1,10 @@
 <template>
   <el-card class="box-card list-container">
-    <el-form class="search-box" :model="searchForm" size="small" ref="searchFrom">
+    <el-form class="search-box" :model="search" size="small" ref="searchFrom">
       <el-row :gutter="20">
         <el-col :span="5">
-          <el-form-item label="课题名称" prop="name">
-            <el-input v-model="research.name" placeholder="请输入课题名称"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="课题类型" prop="type">
-            <el-input v-model="research.type" placeholder="请输入课题类型"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="审核状态" prop="status">
-            <el-select v-model="research.status" size="small" placeholder="请选择状态">
-              <el-option v-for="item in statusList" :key="item.code" :label="item.label" :value="item.code"></el-option>
-            </el-select>
+          <el-form-item label="学生姓名" prop="name">
+            <el-input v-model="search.name" placeholder="请输入学生姓名"></el-input>
           </el-form-item>
         </el-col>
         <el-col :span="8">
@@ -29,10 +17,9 @@
     </el-form>
     <el-table :data="list" style="width: 100%" v-loading="loading" border>
       <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
-      <el-table-column prop="name" label="课题名称" align="center"></el-table-column>
-      <el-table-column prop="type" label="课题类型" align="center"></el-table-column>
-      <el-table-column prop="realname" label="发布人" align="center"></el-table-column>
-      <el-table-column prop="status" label="审核状态" align="center" :formatter="getStatus"></el-table-column>
+      <el-table-column prop="name" label="论文名称" align="center"></el-table-column>
+      <el-table-column prop="studentname" label="学生" align="center"></el-table-column>
+      <el-table-column prop="time" label="时间" align="center"></el-table-column>
       <el-table-column label="审核" align="center" width="250">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" :disabled="scope.row.status === 1 || scope.row.status === 2" @click="audit(scope.row.id, 2)">通过</el-button>
@@ -70,7 +57,7 @@
 </template>
 
 <script>
-import { list, delet, audit } from '@/api/research'
+import { studentTopicList, paperAudit } from '@/api/research'
 import pagination from '@/mixins/pagination'
 
 export default {
@@ -81,10 +68,8 @@ export default {
         { typeId: 0, type: '发布' },
         { typeId: 1, type: '草稿' }
       ],
-      research: {
+      search: {
         name: '',
-        type: '',
-        status: ''
       },
       statusList: [
         { code: 0, label: '待审核' },
@@ -100,7 +85,7 @@ export default {
   methods: {
     getList () {
       this.loading = true
-      list({ pageSize: this.page.pageSize, pageNum: this.page.pageNum, ...this.research }).then(res => {
+      studentTopicList({ pageSize: this.page.pageSize, pageNum: this.page.pageNum, ...this.search }).then(res => {
         this.page.total = res.data.totalRow
         this.list = res.data.list
         this.loading = false
@@ -122,8 +107,8 @@ export default {
       return typeArr[cellValue]
     },
     audit (id, flag) {
-      let send = flag === 1 ? { id: id, status: flag, content: this.reason } : { id: id, status: flag, }
-      audit(send).then(res => {
+      let send = flag === 1 ? { id: id, status: flag, case: this.reason } : { id: id, status: flag, }
+      paperAudit(send).then(res => {
         if (res.code === 200) {
           this.$message({
             message: '审核完成',

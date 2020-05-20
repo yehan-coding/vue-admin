@@ -45,19 +45,78 @@ export const constantRoutes = [
   {
     path: '/research',
     component: Layout,
-    meta: { title: '课题研究' },
+    meta: { title: '课题研究', icon: 'article-data' },
     children: [
       {
         path: 'list',
         name: 'ResearchList',
         component: () => import('@/views/research'),
-        meta: { title: '课题研究', icon: 'article-data' }
+        meta: { title: '课题研究' }
       },
       {
         path: 'my',
         name: 'MyResearch',
         component: () => import('@/views/research/my'),
-        meta: { title: '我发布的课题', icon: 'article-data' }
+        meta: { title: '我的课题' }
+      },
+      {
+        path: 'studentTopic',
+        name: 'StudentTopic',
+        component: () => import('@/views/research/studentTopic'),
+        meta: { title: '学生选题' }
+      },
+      {
+        path: 'studentPaper',
+        name: 'StudentPaper',
+        component: () => import('@/views/research/studentPaper'),
+        meta: { title: '学生论文' }
+      },
+      {
+        path: 'add',
+        name: 'TopicAdd',
+        component: () => import('@/views/research/add'),
+        hidden: true,
+        meta: { title: '发布课题' }
+      },
+      {
+        path: 'update/:id',
+        name: 'TopicUpdate',
+        component: () => import('@/views/research/add'),
+        hidden: true,
+        meta: { 
+          title: '重新提交',
+          isUpdate: true
+        }
+      },
+    ]
+  },
+  {
+    path: '/paper',
+    component: Layout,
+    redirect: '/paper/list',
+    children: [
+      {
+        path: 'list',
+        name: 'PaperList',
+        component: () => import('@/views/paper'),
+        meta: { title: '论文列表', icon: 'article-data' }
+      },
+      {
+        path: 'add',
+        name: 'PaperAdd',
+        component: () => import('@/views/paper/add'),
+        hidden: true,
+        meta: { title: '写论文' }
+      },
+      {
+        path: 'update/:id',
+        name: 'PaperUpdate',
+        component: () => import('@/views/paper/add'),
+        hidden: true,
+        meta: { 
+          title: '修改论文',
+          isUpdate: true
+        }
       }
     ]
   },
@@ -87,15 +146,6 @@ export const constantRoutes = [
         meta: { 
           title: '修改公告信息',
           isUpdate: true
-        }
-      },
-      {
-        path: 'detail/:id',
-        name: 'ScienceInfoDetail',
-        component: () => import('@/views/notice/detail'),
-        hidden: true,
-        meta: { 
-          title: '文章详情'
         }
       }
     ]

@@ -16,7 +16,7 @@ import '@/permission'
 
 Vue.use(ElementUI)
 Vue.prototype.$moment = moment
-Vue.prototype.$imgServer = 'http://ld.z.abv123.com/ld'
+Vue.prototype.$imgServer = 'http://e29990571v.zicp.vip'
 
 Vue.config.productionTip = false
 

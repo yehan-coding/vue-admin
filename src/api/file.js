@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function uploadImg(data) {
   return request({
-    url: 'update/uploadByteam',
+    url: '/upload/updateImg',
     method: 'post',
     data
   })

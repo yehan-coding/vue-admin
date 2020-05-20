@@ -4,7 +4,7 @@ import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
-  info: {},
+  info: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
   role: null
 }
 
@@ -14,6 +14,7 @@ const mutations = {
   },
   SET_INFO: (state, info) => {
     state.info = info
+    localStorage.setItem('user', JSON.stringify(info))
   },
   SET_ROLE: (state, role) => {
     state.role = role
