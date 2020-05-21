@@ -53,3 +53,19 @@ export function mySelectList(data) {
     data
   })
 }
+
+export function messageCount(data) {
+  return request({
+    url: '/topic/count',
+    method: 'post',
+    data
+  })
+}
+
+export function updatePwd(data) {
+  return request({
+    url: '/user/updatePwd',
+    method: 'post',
+    data
+  })
+}

@@ -11,8 +11,8 @@ import moment from 'moment'
 import Pagination from '@/components/Pagination'
 Vue.component('Pagination', Pagination)
 
-import '@/icons'
-import '@/permission'
+import './icons'
+import './permission'
 
 Vue.use(ElementUI)
 Vue.prototype.$moment = moment

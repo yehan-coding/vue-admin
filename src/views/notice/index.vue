@@ -17,7 +17,7 @@
         <el-col :span="8">
           <el-form-item>
             <el-button type="primary" @click="getList" icon="el-icon-search">检索</el-button>
-            <el-button type="primary" @click="toAdd" icon="el-icon-circle-plus-outline">创建</el-button>
+            <el-button type="primary" @click="toAdd" icon="el-icon-circle-plus-outline" v-permission="['admin']">创建</el-button>
             <el-button type="primary" @click="resetSearch" icon="el-icon-refresh">重置</el-button>
           </el-form-item>
         </el-col>
@@ -27,11 +27,12 @@
       <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
       <el-table-column prop="title" label="标题" align="center"></el-table-column>
       <el-table-column prop="content" label="内容" align="center"></el-table-column>
-      <el-table-column prop="TIME" label="发布时间" align="center" :formatter="getDate"></el-table-column>
+      <el-table-column prop="time" label="发布时间" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="250">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" @click="routerTo(`/notice/update/${scope.row.id}`)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="delet(scope.row.id)">删除</el-button>
+          <el-button size="mini" type="primary" @click="routerTo(`/notice/detail/${scope.row.id}`)" v-permission="['teacher', 'student']">查看</el-button>
+          <el-button size="mini" type="primary" @click="routerTo(`/notice/update/${scope.row.id}`)" v-permission="['admin']">编辑</el-button>
+          <el-button size="mini" type="danger" @click="delet(scope.row.id)" v-permission="['admin']">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -54,8 +55,10 @@
 <script>
 import { list, delet } from '@/api/notice'
 import pagination from '@/mixins/pagination'
+import permission from '@/directive/permission/index.js'
 
 export default {
+  directives: { permission },
   mixins: [pagination],
   data () {
     return {
@@ -92,9 +95,6 @@ export default {
     getType (row, column, cellValue, index) {
       let typeArr = ['行业动态']
       return typeArr[cellValue]
-    },
-    getDate (row, column, cellValue, index) {
-      return cellValue.split(' ')[0]
     },
     toAdd () {
       this.$router.push('/notice/add')

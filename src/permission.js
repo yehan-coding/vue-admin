@@ -38,7 +38,8 @@ router.beforeEach(async(to, from, next) => {
       }
     }
   } else {
-    if (whiteList.indexOf(to.path) !== -1) {
+    let str = to.path.split('/')
+    if (whiteList.indexOf('/' + str[1]) !== -1) {
       next()
     } else {
       next(`/login?redirect=${to.path}`)

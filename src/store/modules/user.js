@@ -1,24 +1,35 @@
-import { login, logout, getInfo } from '@/api/user'
+import { login, logout, getInfo, messageCount } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
 
 const state = {
   token: getToken(),
+  roles: [],
+  name: '',
+  avatar: '',
   info: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
-  roles: localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : []
+  messageCount: 0
 }
 
 const mutations = {
   SET_TOKEN: (state, token) => {
     state.token = token
   },
+  SET_ROLE: (state, roles) => {
+    state.roles = roles
+  },
+  SET_NAME: (state, name) => {
+    state.name = name
+  },
+  SET_AVATAR: (state, avatar) => {
+    state.avatar = avatar
+  },
   SET_INFO: (state, info) => {
     state.info = info
     localStorage.setItem('user', JSON.stringify(info))
   },
-  SET_ROLE: (state, roles) => {
-    state.roles = roles
-    localStorage.setItem('roles', JSON.stringify(roles))
+  SET_MESSAGE_COUNT: (state, count) => {
+    state.messageCount = count
   }
 }
 
@@ -43,17 +54,19 @@ const actions = {
   },
 
   // 获取用户信息
-  getInfo({ commit, state }) {
+  getInfo({ commit, state, dispatch }) {
     return new Promise((resolve, reject) => {
-      getInfo(state.token).then(response => {
+      getInfo().then(response => {
         const { data } = response
         if (!data) {
           reject('请重新登录！')
         }
-        const { name, avatar, roles } = data
-        commit('SET_NAME', name)
+        const { realname, avatar, roles } = data
+        commit('SET_NAME', realname)
         commit('SET_AVATAR', avatar)
         commit('SET_ROLE', roles)
+        commit('SET_INFO', data)
+        dispatch('getMessageCount')
         resolve(data)
       }).catch(error => {
         reject(error)
@@ -61,10 +74,17 @@ const actions = {
     })
   },
 
+  getMessageCount({ commit }) {
+    messageCount().then(res => {
+      commit('SET_MESSAGE_COUNT', res.data)
+    })
+  },
+
   // 退出登录
   logout({ commit, state }) {
     return new Promise((resolve, reject) => {
       commit('SET_TOKEN', '')
+      commit('SET_ROLE', [])
       removeToken()
       resetRouter()
       resolve()

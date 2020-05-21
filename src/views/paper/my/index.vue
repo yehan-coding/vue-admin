@@ -23,7 +23,7 @@
       <el-table-column prop="time" label="时间" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="250">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" :disabled="scope.row.status !== 2" @click="routerTo(`/paper/update/${scope.row.id}`)">撰写论文</el-button>
+          <el-button size="mini" type="primary" :disabled="scope.row.status !== 2" v-permission="['student']" @click="routerTo('/paper/add/')">撰写论文</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -46,8 +46,10 @@
 <script>
 import { mySelectList } from '@/api/user'
 import pagination from '@/mixins/pagination'
+import permission from '@/directive/permission/index.js'
 
 export default {
+  directives: { permission },
   mixins: [pagination],
   data () {
     return {

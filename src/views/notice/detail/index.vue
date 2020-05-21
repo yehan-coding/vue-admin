@@ -5,10 +5,6 @@
     </div>
     <div class="content">
       <h3>{{ article.title }}</h3>
-      <div class="author">
-        <span>作者：{{ article.name }}</span>
-        <span>发布时间：{{ article.ctime }}</span>
-      </div>
       <div class="context" v-html="article.content"></div>
     </div>
   </el-card>
@@ -28,6 +24,7 @@ export default {
       detail({ id: id }).then(res => {
         if (res.code === 200) {
           this.article = res.data
+          this.$store.dispatch('user/getMessageCount')
         }
       })
     }

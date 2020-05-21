@@ -1,6 +1,6 @@
 <template>
   <el-card class="box-card list-container">
-    <el-form class="search-box" :model="searchForm" size="small" ref="searchFrom">
+    <el-form class="search-box" :model="research" size="small" ref="searchFrom">
       <el-row :gutter="20">
         <el-col :span="5">
           <el-form-item label="课题名称" prop="name">

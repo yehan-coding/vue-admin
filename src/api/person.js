@@ -1,8 +1,16 @@
 import request from '@/utils/request'
 
+export function list(data) {
+  return request({
+    url: '/user/list',
+    method: 'post',
+    data
+  })
+}
+
 export function detail(data) {
   return request({
-    url: '/teacher/itemById',
+    url: '/user/listById',
     method: 'post',
     data
   })
@@ -10,7 +18,7 @@ export function detail(data) {
 
 export function update(data) {
   return request({
-    url: '/teacher/update',
+    url: '/user/update',
     method: 'post',
     data
   })
@@ -18,8 +26,9 @@ export function update(data) {
 
 export function add(data) {
   return request({
-    url: '/student/searchBySubject',
+    url: '/user/register',
     method: 'post',
     data
   })
 }
+

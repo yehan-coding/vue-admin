@@ -7,22 +7,10 @@
             <el-input v-model="research.name" placeholder="请输入课题名称"></el-input>
           </el-form-item>
         </el-col>
-        <el-col :span="5">
-          <el-form-item label="课题类型" prop="type">
-            <el-input v-model="research.type" placeholder="请输入课题类型"></el-input>
-          </el-form-item>
-        </el-col>
-        <el-col :span="5">
-          <el-form-item label="审核状态" prop="status">
-            <el-select v-model="research.status" size="small" placeholder="请选择状态">
-              <el-option v-for="item in statusList" :key="item.code" :label="item.label" :value="item.code"></el-option>
-            </el-select>
-          </el-form-item>
-        </el-col>
         <el-col :span="8">
           <el-form-item>
             <el-button type="primary" @click="getList" icon="el-icon-search">检索</el-button>
-            <el-button type="primary" @click="toAdd" icon="el-icon-circle-plus-outline">创建</el-button>
+            <el-button type="primary" @click="routerTo('/person/add/')" icon="el-icon-circle-plus-outline">添加老师</el-button>
             <el-button type="primary" @click="resetSearch" icon="el-icon-refresh">重置</el-button>
           </el-form-item>
         </el-col>
@@ -30,13 +18,16 @@
     </el-form>
     <el-table :data="list" style="width: 100%" v-loading="loading" border>
       <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
-      <el-table-column prop="name" label="课题名称" align="center"></el-table-column>
-      <el-table-column prop="type" label="课题类型" align="center"></el-table-column>
-      <el-table-column prop="realname" label="发布人" align="center"></el-table-column>
-      <el-table-column prop="status" label="审核状态" align="center" :formatter="getStatus"></el-table-column>
+      <el-table-column prop="username" label="用户名" align="center"></el-table-column>
+      <el-table-column prop="realname" label="姓名" align="center"></el-table-column>
+      <el-table-column prop="role_id" label="角色" align="center" :formatter="getRole"></el-table-column>
+      <el-table-column prop="research_direction" label="研究方向" align="center"></el-table-column>
+      <el-table-column prop="sex" label="性别" align="center" :formatter="getSex"></el-table-column>
+      <el-table-column prop="email" label="邮箱" align="center"></el-table-column>
+      <el-table-column prop="phone" label="手机号" align="center"></el-table-column>
       <el-table-column label="审核" align="center" width="250">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" :disabled="scope.row.status === 0 || scope.row.status === 2" @click="routerTo(`/research/update/${scope.row.id}`)">重新提交</el-button>
+          <el-button size="mini" type="primary" @click="routerTo(`/person/detail/${scope.row.user_id}`)">查看</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -57,21 +48,15 @@
 </template>
 
 <script>
-import { my, delet, audit } from '@/api/research'
+import { list } from '@/api/person'
 import pagination from '@/mixins/pagination'
 
 export default {
   mixins: [pagination],
   data () {
     return {
-      researchType: [
-        { typeId: 0, type: '发布' },
-        { typeId: 1, type: '草稿' }
-      ],
       research: {
-        name: '',
-        type: '',
-        status: ''
+        name: ''
       },
       statusList: [
         { code: 0, label: '待审核' },
@@ -83,7 +68,7 @@ export default {
   methods: {
     getList () {
       this.loading = true
-      my({ pageSize: this.page.pageSize, pageNum: this.page.pageNum, ...this.research }).then(res => {
+      list({ pageSize: this.page.pageSize, pageNum: this.page.pageNum, ...this.research }).then(res => {
         this.page.total = res.data.totalRow
         this.list = res.data.list
         this.loading = false
@@ -100,8 +85,12 @@ export default {
         }
       })
     },
-    getStatus (row, column, cellValue, index) {
-      let typeArr = ['待审核', '未通过', '已审核']
+    getSex (row, column, cellValue, index) {
+      let typeArr = ['男', '女']
+      return typeArr[cellValue]
+    },
+    getRole (row, column, cellValue, index) {
+      let typeArr = ['', '管理员', '老师', '学生']
       return typeArr[cellValue]
     },
     audit (id, flag) {
@@ -116,20 +105,6 @@ export default {
           this.dialogShow ? this.dialogShow = false : ''
         }
       })
-    },
-    toAdd () {
-      this.$router.push('/research/add')
-    },
-    openDialog (id, flag) {
-      this.dialogShow = true
-      this.currentId = id
-      this.paramsFlag = flag
-    },
-    cancelDialog () {
-      this.dialogShow = false
-      this.currentId = ''
-      this.paramsFlag = ''
-      this.reason = ''
     },
     resetSearch () {
       this.research = {

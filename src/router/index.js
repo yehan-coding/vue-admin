@@ -28,7 +28,10 @@ export const constantRoutes = [
       component: () => import('@/views/home/index'),
       meta: { title: '首页', icon: 'home' }
     }]
-  },
+  }
+]
+
+export const asyncRoutes = [
   {
     path: '/my',
     component: Layout,
@@ -38,20 +41,28 @@ export const constantRoutes = [
         path: 'info',
         name: 'MyInfo',
         component: () => import('@/views/my/info'),
-        meta: { title: '个人信息', icon: 'article-data', roles: ['student', 'admin'] }
+        meta: { title: '个人信息', icon: 'article-data', roles: ['student'] }
+      },
+      {
+        path: 'changePwd',
+        name: 'ChangePwd',
+        component: () => import('@/views/my/changePwd'),
+        hidden: true,
+        meta: { title: '修改密码', icon: 'article-data' }
       }
     ]
   },
   {
     path: '/research',
     component: Layout,
-    meta: { title: '课题研究', icon: 'article-data' },
+    redirect: 'list',
+    meta: { title: '课题模块', icon: 'article-data', roles: ['teacher']  },
     children: [
       {
         path: 'list',
         name: 'ResearchList',
         component: () => import('@/views/research'),
-        meta: { title: '课题研究', roles: ['teacher', 'admin'] }
+        meta: { title: '课题研究', roles: ['teacher'] }
       },
       {
         path: 'my',
@@ -85,8 +96,7 @@ export const constantRoutes = [
         hidden: true,
         meta: { 
           title: '重新提交',
-          isUpdate: true,
-          roles: ['student', 'admin']
+          isUpdate: true
         }
       },
     ]
@@ -95,12 +105,13 @@ export const constantRoutes = [
     path: '/paper',
     component: Layout,
     redirect: '/paper/list',
+    meta: { title: '论文模块', icon: 'article-data' },
     children: [
       {
         path: 'list',
         name: 'PaperList',
         component: () => import('@/views/paper'),
-        meta: { title: '论文列表', icon: 'article-data', roles: ['student', 'teacher'] }
+        meta: { title: '论文列表', icon: 'article-data', roles: ['teacher'] }
       },
       {
         path: 'selectList',
@@ -156,6 +167,43 @@ export const constantRoutes = [
           isUpdate: true,
           roles: ['admin']
         }
+      },
+      {
+        path: 'detail/:id',
+        name: 'NoticeDetail',
+        component: () => import('@/views/notice/detail'),
+        hidden: true,
+        meta: { 
+          title: '公告内容'
+        }
+      }
+    ]
+  },
+  {
+    path: '/person',
+    component: Layout,
+    redirect: '/person/list',
+    meta: { title: '用户模块', icon: 'article-data' },
+    children: [
+      {
+        path: 'list',
+        name: 'PersonList',
+        component: () => import('@/views/person/list'),
+        meta: { title: '用户列表', icon: 'article-data', roles: ['admin'] }
+      },
+      {
+        path: 'detail/:id',
+        name: 'PersonDetail',
+        component: () => import('@/views/person/detail'),
+        hidden: true,
+        meta: { title: '用户信息', icon: 'article-data' }
+      },
+      {
+        path: 'add',
+        name: 'PersonAdd',
+        component: () => import('@/views/person/add'),
+        hidden: true,
+        meta: { title: '添加老师', icon: 'article-data' }
       }
     ]
   },
