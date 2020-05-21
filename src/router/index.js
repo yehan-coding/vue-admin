@@ -38,7 +38,7 @@ export const constantRoutes = [
         path: 'info',
         name: 'MyInfo',
         component: () => import('@/views/my/info'),
-        meta: { title: '个人信息', icon: 'article-data' }
+        meta: { title: '个人信息', icon: 'article-data', roles: ['student', 'admin'] }
       }
     ]
   },
@@ -51,32 +51,32 @@ export const constantRoutes = [
         path: 'list',
         name: 'ResearchList',
         component: () => import('@/views/research'),
-        meta: { title: '课题研究' }
+        meta: { title: '课题研究', roles: ['teacher', 'admin'] }
       },
       {
         path: 'my',
         name: 'MyResearch',
         component: () => import('@/views/research/my'),
-        meta: { title: '我的课题' }
+        meta: { title: '我的课题', roles: ['teacher'] }
       },
       {
         path: 'studentTopic',
         name: 'StudentTopic',
         component: () => import('@/views/research/studentTopic'),
-        meta: { title: '学生选题' }
+        meta: { title: '学生选题', roles: ['teacher'] }
       },
       {
         path: 'studentPaper',
         name: 'StudentPaper',
         component: () => import('@/views/research/studentPaper'),
-        meta: { title: '学生论文' }
+        meta: { title: '学生论文', roles: ['teacher'] }
       },
       {
         path: 'add',
         name: 'TopicAdd',
         component: () => import('@/views/research/add'),
         hidden: true,
-        meta: { title: '发布课题' }
+        meta: { title: '发布课题', roles: ['teacher'] }
       },
       {
         path: 'update/:id',
@@ -85,7 +85,8 @@ export const constantRoutes = [
         hidden: true,
         meta: { 
           title: '重新提交',
-          isUpdate: true
+          isUpdate: true,
+          roles: ['student', 'admin']
         }
       },
     ]
@@ -99,14 +100,20 @@ export const constantRoutes = [
         path: 'list',
         name: 'PaperList',
         component: () => import('@/views/paper'),
-        meta: { title: '论文列表', icon: 'article-data' }
+        meta: { title: '论文列表', icon: 'article-data', roles: ['student', 'teacher'] }
+      },
+      {
+        path: 'selectList',
+        name: 'SelectList',
+        component: () => import('@/views/paper/my'),
+        meta: { title: '选题列表', icon: 'article-data', roles: ['student', 'teacher'] }
       },
       {
         path: 'add',
         name: 'PaperAdd',
         component: () => import('@/views/paper/add'),
         hidden: true,
-        meta: { title: '写论文' }
+        meta: { title: '写论文', roles: ['student'] }
       },
       {
         path: 'update/:id',
@@ -115,7 +122,8 @@ export const constantRoutes = [
         hidden: true,
         meta: { 
           title: '修改论文',
-          isUpdate: true
+          isUpdate: true,
+          roles: ['student', 'teacher']
         }
       }
     ]
@@ -136,7 +144,7 @@ export const constantRoutes = [
         name: 'NoticeAdd',
         component: () => import('@/views/notice/add'),
         hidden: true,
-        meta: { title: '发布公告信息' }
+        meta: { title: '发布公告信息', roles: ['admin'] }
       },
       {
         path: 'update/:id',
@@ -145,7 +153,8 @@ export const constantRoutes = [
         hidden: true,
         meta: { 
           title: '修改公告信息',
-          isUpdate: true
+          isUpdate: true,
+          roles: ['admin']
         }
       }
     ]

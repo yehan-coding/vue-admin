@@ -5,7 +5,7 @@ import { resetRouter } from '@/router'
 const state = {
   token: getToken(),
   info: localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')) : {},
-  role: null
+  roles: localStorage.getItem('roles') ? JSON.parse(localStorage.getItem('roles')) : []
 }
 
 const mutations = {
@@ -16,15 +16,16 @@ const mutations = {
     state.info = info
     localStorage.setItem('user', JSON.stringify(info))
   },
-  SET_ROLE: (state, role) => {
-    state.role = role
+  SET_ROLE: (state, roles) => {
+    state.roles = roles
+    localStorage.setItem('roles', JSON.stringify(roles))
   }
 }
 
 const actions = {
   // 登录
   login({ commit }, userInfo) {
-    const { username, password, captcha } = userInfo
+    const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password.trim() }).then(res => {
         const { data } = res
@@ -32,8 +33,6 @@ const actions = {
           resolve(data.errorMsg)
         } else {
           commit('SET_TOKEN', data.token)
-          commit('SET_INFO', data.userMsg)
-          commit('SET_ROLE', data.userRole)
           setToken(data.token)
           resolve()
         }
@@ -49,11 +48,12 @@ const actions = {
       getInfo(state.token).then(response => {
         const { data } = response
         if (!data) {
-          reject('Verification failed, please Login again.')
+          reject('请重新登录！')
         }
-        const { name, avatar } = data
+        const { name, avatar, roles } = data
         commit('SET_NAME', name)
         commit('SET_AVATAR', avatar)
+        commit('SET_ROLE', roles)
         resolve(data)
       }).catch(error => {
         reject(error)

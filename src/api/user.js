@@ -37,3 +37,19 @@ export function getTeacherList(data) {
     data
   })
 }
+
+export function confirmTopic(data) {
+  return request({
+    url: '/student/add',
+    method: 'post',
+    data
+  })
+}
+
+export function mySelectList(data) {
+  return request({
+    url: '/teacher/listBySubject',
+    method: 'post',
+    data
+  })
+}
