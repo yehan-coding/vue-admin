@@ -32,7 +32,8 @@
         <el-input v-model="info.email"></el-input>
       </el-form-item>
       <el-form-item style="text-align: center;">
-        <el-button type="primary" @click="update">匹配</el-button>
+        <el-button type="primary" @click="update">更新</el-button>
+        <el-button type="primary" @click="match" :disabled="info.is">匹配</el-button>
       </el-form-item>
     </el-form>
     <el-dialog
@@ -104,11 +105,16 @@ export default {
       update(this.info).then(res => {
         if (res.code === 200) {
           this.$store.commit('user/SET_INFO', res.data.user)
-          this.page.pageNum = 1
-          this.matchBox = true
-          this.getTeacherList()
+          this.$message({
+            message: '修改成功',
+            type: 'success'
+          })
         }
       })
+    },
+    match () {
+      this.page.pageNum = 1
+      this.getTeacherList()
     },
     uploadImg (params) {
       const extName = params.file.name.split('.')[params.file.name.split('.').length - 1]
@@ -152,6 +158,7 @@ export default {
             type: 'warning'
           })
         } else {
+          this.matchBox = true
           this.teacherList = res.data.list
           this.page.pageNum ++
         }
@@ -166,6 +173,7 @@ export default {
           })
           this.innerDialog = false
           this.matchBox = false
+          this.$store.dispatch('user/getInfo')
         }
       })
     }

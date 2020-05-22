@@ -26,12 +26,17 @@
         </template>
       </el-table-column>
       <el-table-column prop="title" label="标题" align="center"></el-table-column>
-      <el-table-column prop="content" label="内容" align="center"></el-table-column>
+      <el-table-column label="内容" align="center">
+        <template slot-scope="scope">
+          {{ scope.row.content | htmlToTxt }}
+        </template>
+      </el-table-column>
       <el-table-column prop="sname" label="学生" align="center"></el-table-column>
       <el-table-column prop="time" label="时间" align="center"></el-table-column>
       <el-table-column label="审核" align="center" width="250">
         <template slot-scope="scope">
-          <el-button size="mini" type="primary" :disabled="scope.row.status === 1 || scope.row.status === 2" @click="routerTo(`/paper/update/${scope.row.id}`)">批注</el-button>
+          <el-button size="mini" type="primary" v-permission="['student']" :disabled="scope.row.status === 1 || scope.row.status === 2" @click="routerTo(`/paper/update/${scope.row.id}`)">修改</el-button>
+          <el-button size="mini" type="primary" v-permission="['teacher']" :disabled="scope.row.status === 1 || scope.row.status === 2" @click="routerTo(`/paper/update/${scope.row.id}`)">批注</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -67,8 +72,10 @@
 <script>
 import { paperList, paperAudit } from '@/api/research'
 import pagination from '@/mixins/pagination'
+import permission from '@/directive/permission/index.js'
 
 export default {
+  directives: { permission },
   mixins: [pagination],
   data () {
     return {
@@ -115,7 +122,7 @@ export default {
       return typeArr[cellValue]
     },
     audit (id, flag) {
-      let send = flag === 1 ? { id: id, status: flag, case: this.reason } : { id: id, status: flag, }
+      let send = flag === 1 ? { id: id, status: flag, context: this.reason } : { id: id, status: flag, }
       paperAudit(send).then(res => {
         if (res.code === 200) {
           this.$message({

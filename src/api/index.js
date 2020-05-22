@@ -1,11 +1,22 @@
 import request from '@/utils/request'
 
-export function list(data) {
+export function countUser() {
   return request({
-    url: '/api?method=admin.news.search',
-    method: 'post',
-    data: {
-      params: JSON.stringify(data)
-    }
+    url: '/topic/userCount',
+    method: 'get'
+  })
+}
+
+export function firstNotice() {
+  return request({
+    url: '/topic/frist',
+    method: 'get'
+  })
+}
+
+export function getSwiperList() {
+  return request({
+    url: '/topic/imageList',
+    method: 'get'
   })
 }

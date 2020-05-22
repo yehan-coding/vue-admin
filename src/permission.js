@@ -28,11 +28,11 @@ router.beforeEach(async(to, from, next) => {
           const { roles } = await store.dispatch('user/getInfo')
           const accessRoutes = await store.dispatch('permission/generateRoutes', roles)
           router.addRoutes(accessRoutes)
-          next({ ...to, replace: true })
+          next('/home')
         } catch (error) {
           await store.dispatch('user/resetToken')
           Message.error(error || 'Has Error')
-          next(`/login?redirect=${to.path}`)
+          next(`/login`)
           NProgress.done()
         }
       }
@@ -42,7 +42,7 @@ router.beforeEach(async(to, from, next) => {
     if (whiteList.indexOf('/' + str[1]) !== -1) {
       next()
     } else {
-      next(`/login?redirect=${to.path}`)
+      next(`/login`)
       NProgress.done()
     }
   }

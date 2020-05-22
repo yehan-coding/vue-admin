@@ -26,8 +26,15 @@
     <el-table :data="list" style="width: 100%" v-loading="loading" border>
       <el-table-column type="index" label="编号" align="center" width="50"></el-table-column>
       <el-table-column prop="title" label="标题" align="center"></el-table-column>
-      <el-table-column prop="content" label="内容" align="center"></el-table-column>
+      <el-table-column label="内容" align="center" show-overflow-tooltip>
+        <template slot-scope="scope">
+          {{ scope.row.content | htmlToTxt }}
+        </template>
+      </el-table-column>
+      <el-table-column prop="type" label="类型" align="center" :formatter="getType"></el-table-column>
+      <el-table-column prop="status" label="状态" align="center" :formatter="getStatus"></el-table-column>
       <el-table-column prop="time" label="发布时间" align="center"></el-table-column>
+      <el-table-column prop="ytime" label="浏览时间" align="center"></el-table-column>
       <el-table-column label="操作" align="center" width="250">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" @click="routerTo(`/notice/detail/${scope.row.id}`)" v-permission="['teacher', 'student']">查看</el-button>
@@ -93,7 +100,11 @@ export default {
       })
     },
     getType (row, column, cellValue, index) {
-      let typeArr = ['行业动态']
+      let typeArr = ['发布', '草稿']
+      return typeArr[cellValue]
+    },
+    getStatus (row, column, cellValue, index) {
+      let typeArr = ['已读', '未读']
       return typeArr[cellValue]
     },
     toAdd () {

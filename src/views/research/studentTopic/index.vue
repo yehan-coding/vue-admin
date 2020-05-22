@@ -107,7 +107,7 @@ export default {
       return typeArr[cellValue]
     },
     audit (id, flag) {
-      let send = flag === 1 ? { id: id, status: flag, case: this.reason } : { id: id, status: flag, }
+      let send = flag === 1 ? { id: id, status: flag, context: this.reason } : { id: id, status: flag, }
       paperAudit(send).then(res => {
         if (res.code === 200) {
           this.$message({

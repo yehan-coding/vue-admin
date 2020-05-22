@@ -71,7 +71,7 @@ export default {
             size: 5,
             action: this.imageServer,
             response: (res) => {
-              return this.$imgServer + res.url
+              return this.$imgServer + res.data.url
             }
           },
           toolbar: {

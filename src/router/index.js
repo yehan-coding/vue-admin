@@ -56,13 +56,13 @@ export const asyncRoutes = [
     path: '/research',
     component: Layout,
     redirect: 'list',
-    meta: { title: '课题模块', icon: 'article-data', roles: ['teacher']  },
+    meta: { title: '课题模块', icon: 'article-data' },
     children: [
       {
         path: 'list',
         name: 'ResearchList',
         component: () => import('@/views/research'),
-        meta: { title: '课题研究', roles: ['teacher'] }
+        meta: { title: '课题研究', roles: ['admin'] }
       },
       {
         path: 'my',
@@ -80,7 +80,7 @@ export const asyncRoutes = [
         path: 'studentPaper',
         name: 'StudentPaper',
         component: () => import('@/views/research/studentPaper'),
-        meta: { title: '学生论文', roles: ['teacher'] }
+        meta: { title: '学生论文', roles: ['teacher', 'student'] }
       },
       {
         path: 'add',
@@ -105,7 +105,7 @@ export const asyncRoutes = [
     path: '/paper',
     component: Layout,
     redirect: '/paper/list',
-    meta: { title: '论文模块', icon: 'article-data' },
+    meta: { title: '论文模块', icon: 'article-data', roles: ['teacher', 'student'] },
     children: [
       {
         path: 'list',
@@ -183,7 +183,7 @@ export const asyncRoutes = [
     path: '/person',
     component: Layout,
     redirect: '/person/list',
-    meta: { title: '用户模块', icon: 'article-data' },
+    meta: { title: '用户模块', icon: 'article-data', roles: ['admin'] },
     children: [
       {
         path: 'list',
@@ -204,6 +204,20 @@ export const asyncRoutes = [
         component: () => import('@/views/person/add'),
         hidden: true,
         meta: { title: '添加老师', icon: 'article-data' }
+      },
+    ]
+  },
+  {
+    path: '/swiper',
+    component: Layout,
+    redirect: '/swiper/list',
+    meta: { title: '轮播图模块', icon: 'article-data', roles: ['admin'] },
+    children: [
+      {
+        path: 'list',
+        name: 'SwiperList',
+        component: () => import('@/views/swiper/list'),
+        meta: { title: '图片列表', icon: 'article-data', roles: ['admin'] }
       }
     ]
   },
@@ -211,7 +225,6 @@ export const asyncRoutes = [
 ]
 
 const createRouter = () => new Router({
-  // mode: 'history', // require service support
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRoutes
 })

@@ -33,13 +33,26 @@
       <el-table-column prop="name" label="课题名称" align="center"></el-table-column>
       <el-table-column prop="type" label="课题类型" align="center"></el-table-column>
       <el-table-column prop="realname" label="发布人" align="center"></el-table-column>
-      <el-table-column prop="status" label="审核状态" align="center" :formatter="getStatus"></el-table-column>
+      <el-table-column label="审核状态" align="center">
+        <template slot-scope="scope">
+          {{ getStatus(scope.row.status) }}
+          <el-tooltip class="item" effect="dark" content="点击查看原因" placement="top">
+            <font style="cursor: pointer;" v-if="scope.row.status == 1" @click="showReason(scope.row.content)"> {{ `(查看原因)` }}</font>
+          </el-tooltip>
+        </template>
+      </el-table-column>
       <el-table-column label="审核" align="center" width="250">
         <template slot-scope="scope">
           <el-button size="mini" type="primary" :disabled="scope.row.status === 0 || scope.row.status === 2" @click="routerTo(`/research/update/${scope.row.id}`)">重新提交</el-button>
         </template>
       </el-table-column>
     </el-table>
+    <el-dialog class="audit-box" title="不通过原因" :visible.sync="reasonBox" width="30%" center>
+      <el-input type="textarea" :autosize="{ minRows: 6, maxRows:8}" :value="reason" disabled></el-input>
+      <span slot="footer" class="dialog-footer">
+        <el-button type="primary" @click="reasonBox = false">确 定</el-button>
+      </span>
+    </el-dialog>
     <div class="page-box">
       <el-pagination
         background
@@ -77,7 +90,9 @@ export default {
         { code: 0, label: '待审核' },
         { code: 1, label: '未通过' },
         { code: 2, label: '已审核' },
-      ]
+      ],
+      reasonBox: false,
+      reason: ''
     }
   },
   methods: {
@@ -89,6 +104,10 @@ export default {
         this.loading = false
       })
     },
+    showReason (reason) {
+      this.reasonBox = true
+      this.reason = reason
+    },
     delet (id) {
       delet({ id: id }).then(res => {
         if (res.code === 200) {
@@ -99,10 +118,6 @@ export default {
           this.getList()
         }
       })
-    },
-    getStatus (row, column, cellValue, index) {
-      let typeArr = ['待审核', '未通过', '已审核']
-      return typeArr[cellValue]
     },
     audit (id, flag) {
       let send = flag === 1 ? { id: id, status: flag, content: this.reason } : { id: id, status: flag, }
@@ -138,6 +153,14 @@ export default {
         type: ''
       }
       this.getList()
+    }
+  },
+  computed: {
+    getStatus () {
+      return (status) => {
+        let typeArr = ['待审核', '未通过', '已审核']
+        return typeArr[status]
+      }
     }
   }
 }

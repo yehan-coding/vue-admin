@@ -1,32 +1,32 @@
 import request from '@/utils/request'
 
-export function detail(data) {
+export function list(data) {
   return request({
-    url: '/teacher/itemById',
+    url: '/topic/amdinImageList',
     method: 'post',
     data
   })
 }
 
-export function update(data) {
+export function audit(data) {
   return request({
-    url: '/teacher/update',
+    url: '/topic/imageListByUpdate',
     method: 'post',
     data
   })
 }
 
-export function add(data) {
+export function delet(data) {
   return request({
-    url: '/student/searchBySubject',
+    url: '/topic/imageListByDelete',
     method: 'post',
     data
   })
 }
 
-export function updateTopic (data) {
+export function upload(data) {
   return request({
-    url: '/teacher/audit',
+    url: '/topic/upload',
     method: 'post',
     data
   })

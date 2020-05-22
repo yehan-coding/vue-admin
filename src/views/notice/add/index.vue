@@ -13,7 +13,7 @@
         </el-select>
       </el-form-item>
       <el-form-item label="内容" prop="content">
-        <editor v-model="notice.content" :image-server="$imgServer + '/update/uploadByteam'"></editor>
+        <editor v-model="notice.content" :image-server="$imgServer + '/upload/updateImg'"></editor>
       </el-form-item>
       <el-form-item>
         <template v-if="!$route.meta.isUpdate">

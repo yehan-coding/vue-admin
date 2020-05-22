@@ -1,6 +1,6 @@
 module.exports = {
 
-  title: '中国草业与生态WebGIS系统',
+  title: '毕业设计选题管理系统',
 
   /**
    * @type {boolean} true | false

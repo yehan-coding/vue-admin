@@ -1,52 +1,88 @@
 <template>
-  <div class="home-container">
-    home
-  </div>
+  <el-card class="box-card list-container">
+    <el-row class="row-box" :gutter="20">
+      <el-col :span="8">
+        <el-card class="box-card person-count" shadow="never">
+          <div slot="header" class="clearfix">
+            <span>人员统计</span>
+          </div>
+          <div class="person-wrap">
+            <div class="item">
+              <p>{{ userCount.admin }}</p>
+              <p>管理员</p>
+            </div>
+            <div class="item">
+              <p>{{ userCount.teacher }}</p>
+              <p>老师</p>
+            </div>
+            <div class="item">
+              <p>{{ userCount.student }}</p>
+              <p>学生</p>
+            </div>
+          </div>
+        </el-card>
+      </el-col>
+      <el-col :span="16">
+        <el-card class="box-card person-regist" shadow="never">
+          <div slot="header" class="clearfix">
+            <span>最新公告</span>
+          </div>
+          <div class="board-card" v-html="notice.content"></div>
+        </el-card>
+      </el-col>
+      <el-col :span="24" style="padding-left: 30px;padding-right: 30px;">
+        <el-carousel indicator-position="none" class="swiper" height="600px">
+          <el-carousel-item v-for="item in swiperList" :key="item.id">
+            <img style="width: 100%;height: 100%;" :src="$imgServer + item.image">
+          </el-carousel-item>
+        </el-carousel>
+      </el-col>
+    </el-row>
+  </el-card>
 </template>
 
 <script>
-import BarChart from '@/components/Echart/BarChart'
-import PancakeChart from '@/components/Echart/PancakeChart'
-import { list } from '@/api'
+import { countUser, firstNotice, getSwiperList } from '@/api'
 
 export default {
   name: 'Home',
-  components: {
-    BarChart,
-    PancakeChart
-  },
   data () {
     return {
-      newsList: []
+      userCount: {},
+      notice: {},
+      swiperList: []
     }
   },
   methods: {
-    getNews () {
-      const req1 = list({pageSize: 1, pageNum: 1, title: "", date: [], type: "行业动态"})
-      const req2 = list({pageSize: 1, pageNum: 1, title: "", date: [], type: "科技成果"})
-      Promise.all([req1, req2]).then(res => {
-        res.map(item => {
-          this.newsList.push(item.data.list[0])
-        })
+    getCountData () {
+      countUser().then(res => {
+        this.userCount = res.data
+      })
+    },
+    getFirstNotice () {
+      firstNotice().then(res => {
+        this.notice = res.data
+      })
+    },
+    getSwiperList () {
+      getSwiperList().then(res => {
+        this.swiperList = res.data.list
       })
     }
   },
   created () {
-    this.getNews()
-  },
-  filters: {
-    formatDate (val) {
-      return val.split(' ')[0]
-    }
+    this.getCountData()
+    this.getFirstNotice()
+    this.getSwiperList()
   }
 }
 </script>
 
 <style lang="scss" scoped>
-.home-container {
-  background-color: #EFF1F4;
+.list-container {
+  margin: 20px;
+  min-height: calc(100vh - 90px);
   .row-box {
-    padding: 20px;
     .el-card {
       border: none;
       background: transparent;
@@ -55,52 +91,39 @@ export default {
         border-bottom: none;
       }
       &.person-count {
-        /deep/ .el-card__body {
-          padding: 0;
-        }
-        .el-row {
-          .el-col {
-            div {
-              height: 110px;
-              background-color: #fff;
-              margin-bottom: 20px;
-              text-align: center;
-              p {
-                margin: 0;
-                &:first-child {
-                  font-size: 48px;
-                  line-height: 50px;
-                  color: #303331;
-                  padding-top: 20px;
-                }
-                &:last-child {
-                  font-size: 14px;
-                  line-height: 40px;
-                  color: #606662;
-                }
+        .person-wrap {
+          display: flex;
+          justify-content: space-around;
+          align-items: center;
+          .item {
+            width: 30%;
+            box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+            height: 150px;
+            background-color: #fff;
+            text-align: center;
+            p {
+              margin: 0;
+              &:first-child {
+                font-size: 48px;
+                line-height: 70px;
+                color: #303331;
+                padding-top: 20px;
+              }
+              &:last-child {
+                font-size: 14px;
+                line-height: 40px;
+                color: #606662;
               }
             }
           }
         }
       }
       &.person-regist {
-        /deep/ .el-card__body {
-          padding: 0;
-        }
-        .chart-box {
-          height: 240px;
-          background-color: #fff;
-          overflow: hidden;
-          .bar {
-            padding: 15px;
-            width: 70%;
-            display: inline-block;
-          }
-          .circle {
-            padding: 15px;
-            width: 29%;
-            display: inline-block;
-          }
+        .board-card {
+          box-shadow: 0 2px 12px 0 rgba(0, 0, 0, 0.1);
+          padding: 10px;
+          height: 150px;
+          overflow-y: scroll;
         }
       }
       &.latest-project {
@@ -143,6 +166,10 @@ export default {
                 font-size: 16px;
                 color: #303331;
                 clear: both;
+                cursor: pointer;
+                &:hover {
+                  text-decoration: underline;
+                }
                 span {
                   float: right;
                   color: #909993;
@@ -162,6 +189,10 @@ export default {
                 font-size: 14px;
                 color: #303331;
                 clear: both;
+                cursor: pointer;
+                &:hover {
+                  text-decoration: underline;
+                }
                 span {
                   float: right;
                   color: #909993;
@@ -209,6 +240,10 @@ export default {
               font-size: 16px;
               color: #303331;
               clear: both;
+              cursor: pointer;
+              &:hover {
+                text-decoration: underline;
+              }
               span {
                 float: right;
                 color: #909993;
